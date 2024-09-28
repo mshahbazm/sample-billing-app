@@ -1,0 +1,11 @@
+{
+  "name": "billing-app",
+  "version": "1.0.0",
+  "description": "Simple Billing App for a SaaS Platform Using Cloudflare Workers",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {},
+  "author": "Muhammad Shahbaz Manzoor",
+  "license": "ISC"
+}
