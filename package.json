@@ -5,7 +5,17 @@
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "dev:all": "concurrently \"npm run dev --workspace=billing\" \"npm run dev --workspace=invoicing\" \"npm run dev --workspace=notification\" \"npm run dev --workspace=payment\" \"npm run dev --workspace=subscription\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mshahbazm/sample-billing-app"
+  },
   "author": "Muhammad Shahbaz Manzoor",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "wrangler": "^3.78.12"
+  }
 }
