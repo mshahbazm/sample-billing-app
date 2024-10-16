@@ -5,9 +5,9 @@ name = "subscription"
 # [vars]
 # MY_VAR = "my-variable"
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[[kv_namespaces]]
+binding = "SUBSCRIPTION_MANAGEMENT"
+id = "6aa7d075af61450f8fac02d0796cb011"
 
 # [[r2_buckets]]
 # binding = "MY_BUCKET"
