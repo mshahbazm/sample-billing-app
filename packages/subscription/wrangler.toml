@@ -9,14 +9,10 @@ name = "subscription"
 binding = "SUBSCRIPTION_MANAGEMENT"
 id = "6aa7d075af61450f8fac02d0796cb011"
 
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+[[durable_objects.bindings]]
+class_name = "Customer"
+name = "CUSTOMER"
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
-
-# [ai]
-# binding = "AI"
+[[migrations]]
+new_classes = ["Customer"]
+tag = "v1"

@@ -1,7 +1,18 @@
+import { Customer } from './durable-objects/customer'
+
 export type Env = {
-  SUBSCRIPTION_MANAGEMENT: KVNamespace
+  Bindings: {
+    SUBSCRIPTION_MANAGEMENT: KVNamespace
+    CUSTOMER: DurableObjectNamespace<Customer>
+  }
+  Variables: {
+  }
 }
 
+
+/* =====================
+Subscription Plans 
+=========================*/
 export interface ISubscriptionPlan {
   id: string;
   name: string;
@@ -27,3 +38,28 @@ export interface IResponse<T = any> {
 
 export type TSubscriptionStatus = "active" | "inactive"
 export type TBillingCycle = "monthly" | "yearly"
+
+
+/* =====================
+Customers 
+=========================*/
+
+export interface ICustomer {
+  id: string;
+  name: string;
+  email: string;
+  subscription_plan_id: string;
+  subscription_status: TCustomerSubscriptionStatus;
+  change_subscription_to?: string;
+}
+
+export interface ICustomerValue {
+  name: string;
+  email: string;
+  subscription_plan_id: string;
+  subscription_status: TCustomerSubscriptionStatus;
+  change_subscription_to?: string;
+}
+
+
+export type TCustomerSubscriptionStatus = "active" | "cancelled" | "past_due" | "unpaid"

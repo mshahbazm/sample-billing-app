@@ -20,7 +20,7 @@ import { KV_PREFIXES } from '../config';
 import { Env, IResponse, ISubscriptionPlan, ISubscriptionPlanValue } from '../types';
 import { subscriptionPlanUpdateValidationSchema, subscriptionPlanValidationSchema } from '../validation';
 
-const plans = new Hono<{ Bindings: Env }>()
+const plans = new Hono<Env>()
 
 /* =========================================
 Create a new Plan
@@ -29,9 +29,6 @@ plans.post('/', async (c) => {
   try {
 
     const body = await c.req.json();
-
-    console.log('body');
-
     const inputData = subscriptionPlanValidationSchema.parse(body);
 
     const id = `${KV_PREFIXES.SUBSCRIPTION_PLAN}${createId()}`
@@ -41,7 +38,7 @@ plans.post('/', async (c) => {
       {
         success: true,
         data: {
-          id,
+          id: id.replace(KV_PREFIXES.SUBSCRIPTION_PLAN, ''),
           ...inputData
         } satisfies ISubscriptionPlan
       } satisfies IResponse<ISubscriptionPlan>,
@@ -65,63 +62,6 @@ plans.post('/', async (c) => {
 })
 
 /* =========================================
-Update plan by ID
-============================================*/
-plans.patch('/:id', async (c) => {
-  try {
-    const id = c.req.param('id');
-    let plan = await c.env.SUBSCRIPTION_MANAGEMENT.get(id, 'json') as ISubscriptionPlan;
-    if (!plan) {
-      return c.json(
-        {
-          success: false,
-          error: 'Subscription plan not found',
-        } satisfies IResponse<ISubscriptionPlan>,
-        404
-      );
-    }
-
-    const body = await c.req.json();
-    const inputData = subscriptionPlanUpdateValidationSchema.parse(body);
-
-    if (inputData.name !== plan.name || inputData.status !== plan.status) {
-      plan = {
-        ...plan,
-        name: inputData.name || plan.name,
-        status: inputData.status || plan.status,
-      }
-      await c.env.SUBSCRIPTION_MANAGEMENT.put(id, JSON.stringify(plan))
-    }
-
-    return c.json(
-      {
-        success: true,
-        data: {
-          ...plan
-        } satisfies ISubscriptionPlan
-      } satisfies IResponse<ISubscriptionPlan>,
-      201
-    );
-
-
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return c.json(
-        {
-          success: false,
-          error: 'Validation failed',
-          details: error.errors,
-        } satisfies IResponse,
-        400
-      );
-    }
-    console.log(error);
-    return c.json({ error: 'Internal Server Error', success: false } satisfies IResponse, 500);
-  }
-
-});
-
-/* =========================================
 Get All Plans
 ============================================*/
 plans.get('/', async (c) => {
@@ -134,7 +74,7 @@ plans.get('/', async (c) => {
       keys.map(async (key) => {
         const data = await c.env.SUBSCRIPTION_MANAGEMENT.get(key.name, 'json');
         return {
-          id: key.name,
+          id: key.name.replace(KV_PREFIXES.SUBSCRIPTION_PLAN, ''),
           ...data as ISubscriptionPlanValue
         }
       })
@@ -160,7 +100,7 @@ Get Plan by ID
 plans.get('/:id', async (c) => {
   try {
     const id = c.req.param('id');
-    const plan = await c.env.SUBSCRIPTION_MANAGEMENT.get(id, 'json') as ISubscriptionPlan;
+    const plan = await c.env.SUBSCRIPTION_MANAGEMENT.get(`${KV_PREFIXES.SUBSCRIPTION_PLAN}${id}`, 'json') as ISubscriptionPlanValue;
     if (!plan) {
       return c.json(
         {
@@ -174,7 +114,10 @@ plans.get('/:id', async (c) => {
     return c.json(
       {
         success: true,
-        data: plan
+        data: {
+          id,
+          ...plan
+        }
       } satisfies IResponse<ISubscriptionPlan>,
       200
     );
@@ -184,5 +127,64 @@ plans.get('/:id', async (c) => {
     return c.json({ success: false, error: 'Internal Server Error' }, 500);
   }
 })
+
+/* =========================================
+Update plan by ID
+============================================*/
+plans.patch('/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    let plan = await c.env.SUBSCRIPTION_MANAGEMENT.get(`${KV_PREFIXES.SUBSCRIPTION_PLAN}${id}`, 'json') as ISubscriptionPlanValue;
+    if (!plan) {
+      return c.json(
+        {
+          success: false,
+          error: 'Subscription plan not found',
+        } satisfies IResponse,
+        404
+      );
+    }
+
+    const body = await c.req.json();
+    const inputData = subscriptionPlanUpdateValidationSchema.parse(body);
+
+    if (inputData.name !== plan.name || inputData.status !== plan.status) {
+      plan = {
+        ...plan,
+        name: inputData.name?.length ? inputData.name : plan.name,
+        status: inputData.status?.length ? inputData.status : plan.status,
+      }
+      await c.env.SUBSCRIPTION_MANAGEMENT.put(`${KV_PREFIXES.SUBSCRIPTION_PLAN}${id}`, JSON.stringify(plan))
+    }
+
+    return c.json(
+      {
+        success: true,
+        data: {
+          id,
+          ...plan
+        } satisfies ISubscriptionPlan
+      } satisfies IResponse<ISubscriptionPlan>,
+      201
+    );
+
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return c.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          details: error.errors,
+        } satisfies IResponse,
+        400
+      );
+    }
+    console.log(error);
+    return c.json({ error: 'Internal Server Error', success: false } satisfies IResponse, 500);
+  }
+
+});
+
 
 export default plans;
