@@ -1,10 +1,20 @@
 import { z } from 'zod';
 
-// Define the Zod schema for Subscription Plan
+// Zod schema for Subscription Plan
 export const subscriptionPlanValidationSchema = z.object({
-  name: z.string().min(1, "Name is required"), // Ensure name is not empty
-  billing_cycle: z.enum(["monthly", "yearly"]), // Limit to specific billing cycles
-  price: z.number().positive(), // Ensure price is a positive number
-  status: z.enum(["active", "inactive"]), // Limit to specific statuses
+  name: z.string().min(1, "Name is required"),
+  billing_cycle: z.enum(["monthly", "yearly"]),
+  price: z.number().positive(),
+  status: z.enum(["active", "inactive"]),
 });
 
+// Zod schema for Subscription Plan update: Don't allow price,
+export const subscriptionPlanUpdateValidationSchema = z.object({
+  name: z.string().optional(),
+  status: z.enum(["active", "inactive"]).optional(),
+  price: z.number().optional(),
+  billing_cycle: z.enum(['monthly', 'yearly']).optional(),
+}).refine(data => !(data.price || data.billing_cycle), {
+  message: 'Price and billing_cycle can not be updated, please create a new subscription plan.',
+  path: ['price', 'billing_cycle'],
+});
