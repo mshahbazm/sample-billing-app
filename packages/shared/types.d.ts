@@ -50,8 +50,11 @@ export type TCustomerSubscriptionStatus = "active" | "cancelled" | "past_due" | 
 /*======================
 Invoice
 ========================= */
-interface IInvoice {
+export interface IInvoice extends IInvoiceValue {
   id: string;
+}
+
+export interface IInvoiceValue {
   customer_id: string;
   amount: number;
   due_date: Date
@@ -63,5 +66,17 @@ export type TInvoicePaymentSatus = "generated" | "pending" | "paid" | "failed"
 
 
 /*======================
-Payment
+Notification
 ========================= */
+
+
+export interface INotificationInput {
+  type: TNotificationType;
+  id: string;
+  customer: ICustomer;
+  variant?: TNotificationVariant
+  invoice?: IInvoice;
+}
+
+type TNotificationType = "invoice" | "payment"
+type TNotificationVariant = "success" | "failure"

@@ -1,3 +1,17 @@
+/**
+ * Customers Controller
+ * ----------------------------
+ * This file contains route handlers for managing Customers.
+ * It includes routes for creating, updating, and retrieving customers.
+ *
+ * Endpoints:
+ * - POST /customers: Create a new customer.
+ * - GET /customers: Retrieve all customers (without pagination).
+ * - POST /customers/:id/assign-plan: Change customer subscription plan 
+ * - GET /customers/:id: Get Customer details
+
+ */
+
 import { createId } from '@paralleldrive/cuid2';
 import { Hono } from 'hono';
 import { z } from 'zod';
@@ -113,9 +127,9 @@ customers.get('/', async (c) => {
 /* =========================================
 Assign Subscription Plan to Customer
 ============================================*/
-customers.post('/:customerId/assign-plan', async (c) => {
+customers.post('/:id/assign-plan', async (c) => {
   try {
-    const customerId = c.req.param('customerId');
+    const customerId = c.req.param('id');
     const body = await c.req.json();
     const { subscription_plan_id } = body;
 
@@ -149,9 +163,9 @@ customers.post('/:customerId/assign-plan', async (c) => {
 /* =========================================
 Get Customer Details
 ============================================*/
-customers.get('/:customerId', async (c) => {
+customers.get('/:id', async (c) => {
   try {
-    const customerId = c.req.param('customerId');
+    const customerId = c.req.param('id');
 
     const customerStub = c.env.CUSTOMER.get(c.env.CUSTOMER.idFromName(customerId));
     if (!customerStub) {

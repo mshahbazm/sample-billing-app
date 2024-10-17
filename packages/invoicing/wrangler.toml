@@ -6,3 +6,8 @@ compatibility_flags = [ "nodejs_compat" ]
 [[kv_namespaces]]
 binding = "INVOICING"
 id = "2d9bd56426ee4478b088b97af79046da"
+
+
+[[queues.producers]]
+binding = "NOTIFICATION_QUEUE"
+queue = "notification-queue"

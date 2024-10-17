@@ -1,6 +1,7 @@
 import { createId } from '@paralleldrive/cuid2';
+import { z } from 'zod';
 import FutureDate from '../../../shared/helpers/future-date';
-import { IInvoice } from '../../../shared/types';
+import { IInvoice, IResponse } from '../../../shared/types';
 import { customerValidationSchema, subscriptionPlanValidationSchema } from '../../../shared/validation';
 import { KV_PREFIXES } from '../config';
 import { IGenerateInvoiceInput } from '../types';
@@ -41,6 +42,14 @@ const GenerateInvoice = async ({ data, INVOICING }: { data: IGenerateInvoiceInpu
       data: invoice
     }
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: 'Validation failed',
+        details: error.errors,
+      } satisfies IResponse
+    }
+    console.log(error);
     throw error
   }
 }
