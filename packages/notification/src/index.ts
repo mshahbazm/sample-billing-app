@@ -14,7 +14,8 @@ app.get('/', async (c) => {
       a: 1
     }
   }
-  await c.env.NOTIFICATION_QUEUE.send(exampleNotif);
+  console.log('#####0', c.env.BILLING_BREVO_API_KEY);
+  // await c.env.NOTIFICATION_QUEUE.send(exampleNotif);
   return c.json({ success: true });
 })
 
@@ -26,7 +27,7 @@ export default {
       console.log('#####1', message);
       try {
         // Process the message
-        await processMessage(message.body);
+        // await processMessage(message.body);
         console.log(`Processed message: ${message.id}`);
       } catch (error) {
         console.error(`Error processing message ${message.id}: ${error}`);

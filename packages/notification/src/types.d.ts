@@ -6,7 +6,8 @@ export type Env = {
 
 export type BindingEnvironment = {
   readonly NOTIFICATION_QUEUE: Queue<INotificationInput>;
-  readonly LOGS_BUCKET: R2Bucket
+  readonly LOGS_BUCKET: R2Bucket;
+  BILLING_BREVO_API_KEY: string
 }
 
 export interface INotificationInput {
