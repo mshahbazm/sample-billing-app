@@ -4,8 +4,7 @@ export type Env = {
   Bindings: {
     SUBSCRIPTION_MANAGEMENT: KVNamespace
     CUSTOMER: DurableObjectNamespace<Customer>
-  }
-  Variables: {
+    INVOICING_SERVICE: Service
   }
 }
 

@@ -11,8 +11,6 @@ const app = new Hono<Env>()
 app.route('/subscription-plans/', plans);
 app.route('/customers/', customers);
 
-
-
 export default app
 
 export {

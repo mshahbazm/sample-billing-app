@@ -88,4 +88,7 @@ invoices.get('/:customerId', async (c) => {
   }
 })
 
-export default invoices
+
+export default {
+  fetch: invoices.fetch
+}

@@ -1,0 +1,21 @@
+compatibility_date = "2024-09-28"
+compatibility_flags = ["nodejs_compat"]
+main = "src/index.js"
+name = "notification"
+
+[vars]
+EMAIL_API_KEY = ""
+
+[[queues.producers]]
+binding = "NOTIFICATION_QUEUE"
+queue = "notification-queue"
+
+[[queues.consumers]]
+max_batch_size = 2
+max_batch_timeout = 10
+max_retries = 3
+queue = "notification-queue"
+
+[[r2_buckets]]
+binding = "LOGS_BUCKET"
+bucket_name = "billing-logs"

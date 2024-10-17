@@ -144,6 +144,28 @@ customers.post('/:id/assign-plan', async (c) => {
     }
 
     const customerStub = c.env.CUSTOMER.get(c.env.CUSTOMER.idFromName(customerId));
+
+    const customer = await customerStub.getCustomer();
+    if (customer.subscription_status !== 'active') {
+      /* Customer is not active so without extra calculate invoice generation can be initiated */
+
+      try {
+        const res = await c.env.INVOICING_SERVICE.fetch('http://INVOICING_SERVICE/invoices/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(invoiceData),
+        });
+        const resData = await res.json()
+      } catch (error) {
+        /*  */
+      }
+
+    } else {
+      /* Pro-rated billing, get Rules from billing engine */
+    }
+
     const updatedCustomer = await customerStub.putCustomerData({ subscription_plan_id });
 
     return c.json(
