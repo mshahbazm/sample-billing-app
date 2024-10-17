@@ -6,8 +6,6 @@ export type Env = {
     INVOICING: KVNamespace;
     readonly NOTIFICATION_QUEUE: Queue<INotificationInput>;
   }
-  Variables: {
-  }
 }
 
 interface IGenerateInvoiceInput {
