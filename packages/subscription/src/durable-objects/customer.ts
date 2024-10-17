@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import { ICustomer, ICustomerValue, TCustomerSubscriptionStatus } from '../types';
+import { ICustomer, ICustomerValue, TCustomerSubscriptionStatus } from '../../../shared/types';
 
 export class Customer extends DurableObject {
   async getCustomer() {

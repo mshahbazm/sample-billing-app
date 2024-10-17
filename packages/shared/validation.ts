@@ -5,6 +5,7 @@ Subscription Plan Validation
 =============================== */
 
 export const subscriptionPlanValidationSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, "Name is required"),
   billing_cycle: z.enum(["monthly", "yearly"]),
   price: z.number().positive(),
@@ -26,6 +27,7 @@ export const subscriptionPlanUpdateValidationSchema = z.object({
 Customer Validation
 =================================================== */
 export const customerValidationSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, "Name is required"),
   email: z.string().email(),
   subscription_plan_id: z.string(),

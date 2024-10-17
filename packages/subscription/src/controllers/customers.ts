@@ -1,9 +1,10 @@
 import { createId } from '@paralleldrive/cuid2';
 import { Hono } from 'hono';
 import { z } from 'zod';
+import { ICustomer, IResponse, ISubscriptionPlan } from '../../../shared/types';
+import { customerValidationSchema } from '../../../shared/validation';
 import { KV_PREFIXES } from '../config';
-import { Env, ICustomer, IResponse, ISubscriptionPlan } from '../types';
-import { customerValidationSchema } from '../validation';
+import { Env } from '../types';
 
 const customers = new Hono<Env>();
 
