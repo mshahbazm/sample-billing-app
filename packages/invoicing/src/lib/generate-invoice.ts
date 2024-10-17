@@ -1,8 +1,9 @@
 import { createId } from '@paralleldrive/cuid2';
-import FutureDate from '../../../shared/lib/future-date';
+import FutureDate from '../../../shared/helpers/future-date';
+import { IInvoice } from '../../../shared/types';
 import { customerValidationSchema, subscriptionPlanValidationSchema } from '../../../shared/validation';
 import { KV_PREFIXES } from '../config';
-import { IGenerateInvoiceInput, IInvoice } from '../types';
+import { IGenerateInvoiceInput } from '../types';
 
 const GenerateInvoice = async ({ data, INVOICING }: { data: IGenerateInvoiceInput, INVOICING: KVNamespace }) => {
   try {
